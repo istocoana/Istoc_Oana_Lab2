@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Authors
+namespace Istoc_Oana_Lab2.Pages.Categories
 {
     public class CreateModel : PageModel
     {
@@ -25,22 +25,18 @@ namespace Istoc_Oana_Lab2.Pages.Authors
         }
 
         [BindProperty]
-        public Author Author { get; set; } = default!;
+        public Category Category { get; set; } = default!;
+        
 
-
+        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Author == null || Author == null)
+          if (!ModelState.IsValid || _context.Category == null || Category == null)
             {
-                var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-                ViewData["Errors"] = errors;
                 return Page();
             }
 
-            _context.Author.Add(Author);
+            _context.Category.Add(Category);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

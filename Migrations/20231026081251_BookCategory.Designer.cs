@@ -4,6 +4,7 @@ using Istoc_Oana_Lab2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Istoc_Oana_Lab2.Migrations
 {
     [DbContext(typeof(Istoc_Oana_Lab2Context))]
-    partial class Istoc_Oana_Lab2ContextModelSnapshot : ModelSnapshot
+    [Migration("20231026081251_BookCategory")]
+    partial class BookCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,9 +56,6 @@ namespace Istoc_Oana_Lab2.Migrations
                     b.Property<int?>("AuthorID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(6,2)");
 
@@ -73,8 +72,6 @@ namespace Istoc_Oana_Lab2.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("AuthorID");
-
-                    b.HasIndex("CategoryID");
 
                     b.HasIndex("PublisherID");
 
@@ -106,17 +103,17 @@ namespace Istoc_Oana_Lab2.Migrations
 
             modelBuilder.Entity("Istoc_Oana_Lab2.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryID");
+                    b.HasKey("ID");
 
                     b.ToTable("Category");
                 });
@@ -144,17 +141,11 @@ namespace Istoc_Oana_Lab2.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorID");
 
-                    b.HasOne("Istoc_Oana_Lab2.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryID");
-
                     b.HasOne("Istoc_Oana_Lab2.Models.Publisher", "Publisher")
                         .WithMany("Books")
                         .HasForeignKey("PublisherID");
 
                     b.Navigation("Author");
-
-                    b.Navigation("Category");
 
                     b.Navigation("Publisher");
                 });

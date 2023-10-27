@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Publisher
+namespace Istoc_Oana_Lab2.Pages.Categories
 {
     public class IndexModel : PageModel
     {
@@ -19,13 +19,14 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
             _context = context;
         }
 
-        public IList<Book> Book { get;set; } = default!;
+        public IList<Category> Category { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Book = await _context.Book
-            .Include(b => b.Publisher)
-            .ToListAsync();
+            if (_context.Category != null)
+            {
+                Category = await _context.Category.ToListAsync();
+            }
         }
     }
 }

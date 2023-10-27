@@ -1,4 +1,5 @@
-﻿@page
+﻿@page "/"
+@using Istoc_Oana_Lab2.Models;
 @model Istoc_Oana_Lab2.Pages.Books.IndexModel
 
 @{
@@ -28,6 +29,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Book[0].PublishingDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].BookCategories)
+            </th>
+      
         </tr>
     </thead>
     <tbody>
@@ -48,6 +53,13 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PublishingDate)
+            </td>
+            <td>
+                @foreach (var category in item.BookCategories.Select(bc => bc.Category))
+                {
+                    <span>@category.CategoryName</span>
+                    <br />
+                }
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |

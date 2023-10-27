@@ -22,8 +22,12 @@ namespace Istoc_Oana_Lab2.Models
         public int? AuthorID { get; set; }
 
         public Author? Author { get; set; }
-        public List<AuthorBook> AuthorBooks { get; set; }
 
+        public int? CategoryID { get; set; }
+
+        public Category? Category { get; set; }
+
+        public List<BookCategory> BookCategories { get; set; }
 
     }
 }

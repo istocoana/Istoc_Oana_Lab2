@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Publisher
+namespace Istoc_Oana_Lab2.Pages.Publishers
 {
     public class CreateModel : PageModel
     {
@@ -25,18 +25,18 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
         }
 
         [BindProperty]
-        public Book Book { get; set; } = default!;
+        public Publisher Publisher { get; set; } = default!;
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Book == null || Book == null)
+          if (!ModelState.IsValid || _context.Publisher == null || Publisher == null)
             {
                 return Page();
             }
 
-            _context.Book.Add(Book);
+            _context.Publisher.Add(Publisher);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

@@ -1,56 +1,52 @@
 ﻿@page
-@using Istoc_Oana_Lab2.Models;
 @model Istoc_Oana_Lab2.Pages.Books.CreateModel
+@using Istoc_Oana_Lab2.Models
 
-@{
-    ViewData["Title"] = "Create";
-}
+<h1>Create a Book</h1>
 
-<h1>Create a book</h1>
-
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Book.Title" class="control-label"></label>
-                <input asp-for="Book.Title" class="form-control" />
-                <span asp-validation-for="Book.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Book.Price" class="control-label"></label>
-                <input asp-for="Book.Price" class="form-control" />
-                <span asp-validation-for="Book.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                 <label asp-for="Book.AuthorID" class="control-label">Author</label>
-                <select asp-for="Book.AuthorID" asp-items='new SelectList(Model.Authors, "ID", "FirstName")'></select>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Book.PublisherID" class="control-label">Publisher</label>
-                <select asp-for="Book.PublisherID" asp-items="ViewBag.PublisherList" class="form-control"></select>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Book.PublishingDate" class="control-label"></label>
-                <input asp-for="Book.PublishingDate" class="form-control" />
-                <span asp-validation-for="Book.PublishingDate" class="textdanger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Book.Title"></label>
+        <input asp-for="Book.Title" class="form-control" />
     </div>
-</div>
+
+    <div class="form-group">
+        <label asp-for="Book.Price"></label>
+        <input asp-for="Book.Price" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.AuthorID">Author</label>
+        <select asp-for="Book.AuthorID" asp-items="new SelectList(Model.Authors, nameof(Author.ID), nameof(Author.FirstName))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.PublisherID">Publisher</label>
+        <select asp-for="Book.PublisherID" asp-items="new SelectList(Model.Publishers, nameof(Publisher.ID), nameof(Publisher.PublisherName))"></select>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="Book.PublishingDate"></label>
+        <input asp-for="Book.PublishingDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Categories:</label>
+        @foreach (var category in Model.Categories)
+        {
+            <div>
+                <input type="checkbox" id="Category_@category.CategoryID" name="selectedCategories" value="@category.CategoryID">
+                <label for="Category_@category.CategoryID">@category.CategoryName</label>
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
 
 <div>
     <a asp-page="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-}

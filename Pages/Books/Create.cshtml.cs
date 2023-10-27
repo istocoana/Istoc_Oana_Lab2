@@ -1,55 +1,61 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Istoc_Oana_Lab2.Data;
+using Istoc_Oana_Lab2.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Istoc_Oana_Lab2.Data;
-using Istoc_Oana_Lab2.Models;
 
 namespace Istoc_Oana_Lab2.Pages.Books
 {
-    public class CreateModel : PageModel
+    public class CreateModel : BookCategoriesPageModel
     {
-        private readonly Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context _context;
+        private readonly Istoc_Oana_Lab2Context _context;
 
-        public CreateModel(Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context context)
+        public CreateModel(Istoc_Oana_Lab2Context context)
         {
             _context = context;
         }
 
-        public List<Author> Authors { get; set; }
-
-        public void OnGet()
-        {
-            Authors = _context.Author.ToList();
-
-        }
-
         [BindProperty]
-        public Book Book { get; set; } = default!;
+        public Book Book { get; set; }
 
-        public async Task<IActionResult> OnPostAsync()
+        public List<Author> Authors { get; set; }
+        public List<Publisher> Publishers { get; set; }
+        public List<Category> Categories { get; set; }
+
+
+        public async Task<PageResult> OnGetAsync()
         {
-            if (!ModelState.IsValid || Book == null)
+            Authors = await _context.Author.ToListAsync();
+            Publishers = await _context.Publisher.ToListAsync();
+            Categories = await _context.Category.ToListAsync();
+            var book = new Book();
+            book.BookCategories = new List<BookCategory>();
+            PopulateAssignedCategoryData(_context, book);
+            return Page();
+        }
+   
+        public async Task<IActionResult> OnPostAsync(string[] selectedCategories)
+        {
+            var newBook = new Book();
+            if (selectedCategories != null)
             {
-                return Page();
-            }
-
-            if (Book.AuthorID != null)
-            {
-                var author = _context.Author.Find(Book.AuthorID);
-
-                if (author != null)
+                newBook.BookCategories = new List<BookCategory>();
+                foreach (var cat in selectedCategories)
                 {
-                    Book.Author = author;
+                    var catToAdd = new BookCategory
+                    {
+                        CategoryID = int.Parse(cat)
+                    };
+                    newBook.BookCategories.Add(catToAdd);
                 }
             }
-
+            Book.BookCategories = newBook.BookCategories;
             _context.Book.Add(Book);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
         }
 

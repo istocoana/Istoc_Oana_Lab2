@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Publisher
+namespace Istoc_Oana_Lab2.Pages.Categories
 {
     public class DetailsModel : PageModel
     {
@@ -19,23 +19,23 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
             _context = context;
         }
 
-      public Book Book { get; set; } = default!; 
+      public Category Category { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Book == null)
+            if (id == null || _context.Category == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
-            if (book == null)
+            var category = await _context.Category.FirstOrDefaultAsync(m => m.CategoryID == id);
+            if (category == null)
             {
                 return NotFound();
             }
             else 
             {
-                Book = book;
+                Category = category;
             }
             return Page();
         }

@@ -4,74 +4,103 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Istoc_Oana_Lab2.Pages.Books
 {
-    public class EditModel : PageModel
+    public class EditModel : BookCategoriesPageModel
     {
-        private readonly Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context _context;
+        private readonly Istoc_Oana_Lab2Context _context;
 
-        public EditModel(Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context context)
+        public EditModel(Istoc_Oana_Lab2Context context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Book Book { get; set; } = default!;
+        public Book Book { get; set; }
+        public List<Author> Authors { get; set; }
+        public List<Publisher> Publishers { get; set; }
+        public List<Category> SelectedCategories { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Book == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var book =  await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
-            if (book == null)
+            Book = await _context.Book
+                .Include(b => b.Author)
+                .Include(b => b.Publisher)
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category)
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (Book == null)
             {
                 return NotFound();
             }
-            Book = book;
+
+            Authors = await _context.Author.ToListAsync();
+            Publishers = await _context.Publisher.ToListAsync();
+
+            AssignedCategoryDataList = new List<AssignedCategoryData>();
+
+            foreach (var category in _context.Category)
+            {
+                var assignedCategory = new AssignedCategoryData
+                {
+                    CategoryID = category.CategoryID,
+                    Name = category.CategoryName
+                };
+
+                assignedCategory.Assigned = Book.BookCategories.Any(bc => bc.CategoryID == category.CategoryID);
+
+                AssignedCategoryDataList.Add(assignedCategory);
+            }
+            PopulateAssignedCategoryData(_context, Book);
+
+
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id, string[] selectedCategories)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(Book).State = EntityState.Modified;
+            var bookToUpdate = await _context.Book
+                .Include(i => i.Publisher)
+                .Include(i => i.BookCategories)
+                .ThenInclude(i => i.Category)
+                .FirstOrDefaultAsync(s => s.ID == id);
 
-            try
+            if (bookToUpdate == null)
             {
+                return NotFound();
+            }
+
+            if (await TryUpdateModelAsync<Book>(
+                bookToUpdate,
+                "Book",
+                i => i.Title, i => i.AuthorID, i => i.Price, i => i.PublishingDate, i => i.PublisherID))
+            {
+                UpdateBookCategories(_context, selectedCategories, bookToUpdate);
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(Book.ID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
-        }
-
-        private bool BookExists(int id)
-        {
-          return (_context.Book?.Any(e => e.ID == id)).GetValueOrDefault();
+            Authors = await _context.Author.ToListAsync();
+            Publishers = await _context.Publisher.ToListAsync();
+            PopulateAssignedCategoryData(_context, bookToUpdate);
+            return Page();
         }
     }
 }

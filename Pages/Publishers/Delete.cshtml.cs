@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Publisher
+namespace Istoc_Oana_Lab2.Pages.Publishers
 {
     public class DeleteModel : PageModel
     {
@@ -20,40 +20,40 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
         }
 
         [BindProperty]
-      public Book Book { get; set; } = default!;
+      public Publisher Publisher { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Book == null)
+            if (id == null || _context.Publisher == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
+            var publisher = await _context.Publisher.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (book == null)
+            if (publisher == null)
             {
                 return NotFound();
             }
             else 
             {
-                Book = book;
+                Publisher = publisher;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Book == null)
+            if (id == null || _context.Publisher == null)
             {
                 return NotFound();
             }
-            var book = await _context.Book.FindAsync(id);
+            var publisher = await _context.Publisher.FindAsync(id);
 
-            if (book != null)
+            if (publisher != null)
             {
-                Book = book;
-                _context.Book.Remove(Book);
+                Publisher = publisher;
+                _context.Publisher.Remove(Publisher);
                 await _context.SaveChangesAsync();
             }
 

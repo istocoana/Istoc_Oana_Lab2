@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
 
-namespace Istoc_Oana_Lab2.Pages.Publisher
+namespace Istoc_Oana_Lab2.Pages.Publishers
 {
     public class EditModel : PageModel
     {
@@ -21,21 +21,21 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
         }
 
         [BindProperty]
-        public Book Book { get; set; } = default!;
+        public Publisher Publisher { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Book == null)
+            if (id == null || _context.Publisher == null)
             {
                 return NotFound();
             }
 
-            var book =  await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
-            if (book == null)
+            var publisher =  await _context.Publisher.FirstOrDefaultAsync(m => m.ID == id);
+            if (publisher == null)
             {
                 return NotFound();
             }
-            Book = book;
+            Publisher = publisher;
             return Page();
         }
 
@@ -48,7 +48,7 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
                 return Page();
             }
 
-            _context.Attach(Book).State = EntityState.Modified;
+            _context.Attach(Publisher).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +56,7 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookExists(Book.ID))
+                if (!PublisherExists(Publisher.ID))
                 {
                     return NotFound();
                 }
@@ -69,9 +69,9 @@ namespace Istoc_Oana_Lab2.Pages.Publisher
             return RedirectToPage("./Index");
         }
 
-        private bool BookExists(int id)
+        private bool PublisherExists(int id)
         {
-          return (_context.Book?.Any(e => e.ID == id)).GetValueOrDefault();
+          return (_context.Publisher?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }
