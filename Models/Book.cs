@@ -6,6 +6,8 @@ namespace Istoc_Oana_Lab2.Models
 {
     public class Book   
     {
+        internal IEnumerable<Category> Categories;
+
         public int ID { get; set; }
 
         [Display(Name = "Book Title")]
@@ -29,5 +31,5 @@ namespace Istoc_Oana_Lab2.Models
 
         public List<BookCategory> BookCategories { get; set; }
 
-    }
+        }
 }
