@@ -28,8 +28,12 @@ namespace Istoc_Oana_Lab2.Models
         public int? CategoryID { get; set; }
 
         public Category? Category { get; set; }
+        public int? BorrowingID { get; set; }
+        public Borrowing? Borrowing { get; set; }
 
         public List<BookCategory> BookCategories { get; set; }
+
+
 
         }
 }

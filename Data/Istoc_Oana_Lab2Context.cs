@@ -25,7 +25,20 @@ namespace Istoc_Oana_Lab2.Data
         public DbSet<Category>? Category { get; set; }
         public DbSet<BookCategory>? BookCategory { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()
+                .HasOne(b => b.Borrowing)
+                .WithOne(bw => bw.Book)
+                .HasForeignKey<Borrowing>(bw => bw.BookID);
+        }
+
+        public DbSet<Istoc_Oana_Lab2.Models.Member>? Member { get; set; }
+
+        public DbSet<Istoc_Oana_Lab2.Models.Borrowing>? Borrowing { get; set; }
+
 
     }
+
 
 }
