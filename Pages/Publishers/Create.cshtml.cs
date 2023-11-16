@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Istoc_Oana_Lab2.Pages.Publishers
 {
+    [Authorize(Roles = "Admin")]
+
     public class CreateModel : PageModel
     {
         private readonly Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context _context;

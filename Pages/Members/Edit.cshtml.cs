@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Istoc_Oana_Lab2.Data;
 using Istoc_Oana_Lab2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Istoc_Oana_Lab2.Pages.Members
 {
+    [Authorize(Roles = "Admin")]
+
     public class EditModel : PageModel
     {
         private readonly Istoc_Oana_Lab2.Data.Istoc_Oana_Lab2Context _context;
